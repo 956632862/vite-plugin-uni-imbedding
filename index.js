@@ -1,32 +1,44 @@
+import {getPagesMap, initPages, getRoute} from "./utils"
+
+let pagesMap = {}
+
 export default function (config) {
     const {components} = config
 
-    const regex = /<([a-zA-Z][\w-]*)[^>]*>/
-
-    const names =  components.map((component) => component.match(regex)[1])
-
     return {
-        name:"vite-plugin-uni-embedding",
+        name: "vite-plugin-uni-embedding",
         enforce: 'pre',
 
         async transform(code, id) {
 
-            if (id.endsWith(".vue")){
-                if (names.some(name => id.endsWith(`${name}.vue`))) return null
+            init(this)
+
+            const route = getRoute(id)
+            if (id.endsWith(".vue") && pagesMap[route]) {
+
                 let insertCode = ''
 
                 components.forEach(component => {
                     insertCode += component
                 })
 
-                const updatedCode = code.replace(/(<template>)/, `$1\n${insertCode}\n`);
+                const updatedCode = code.replace(/(<\/template>)/, `\n${insertCode}\n</template>`);
+
 
                 return {
                     code: updatedCode,
                     map: null // 如果需要，可以生成 source map
                 };
+
             }
+
 
         }
     }
+}
+
+function init(that) {
+    const isWx = process.env.UNI_PLATFORM === "mp-weixin"
+    isWx && initPages(that)
+    isWx && (pagesMap = getPagesMap())
 }
