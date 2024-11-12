@@ -6,7 +6,7 @@ export default function (config) {
     const {components} = config
 
     return {
-        name: "vite-plugin-uni-embedding",
+        name: "vite-plugin-uni-imbedding",
         enforce: 'pre',
 
         async transform(code, id) {
