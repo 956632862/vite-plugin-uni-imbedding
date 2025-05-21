@@ -1,4 +1,5 @@
 import {getPagesMap, initPages, getRoute} from "./utils"
+import {normalizePath} from "vite"
 
 let pagesMap = {}
 
@@ -10,11 +11,12 @@ export default function (config) {
         enforce: 'pre',
 
         async transform(code, id) {
+            const _id = normalizePath(id)
 
             init(this)
 
-            const route = getRoute(id)
-            if (id.endsWith(".vue") && pagesMap[route]) {
+            const route = getRoute(_id)
+            if (_id.endsWith(".vue") && pagesMap[route]) {
 
                 let insertCode = ''
 

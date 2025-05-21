@@ -6,10 +6,12 @@
  */
 import path from "path"
 import fs from "fs"
+import {normalizePath} from "vite"
+
 const stripJsonComments = require("strip-json-comments")
 
 let pagesJson = {}
-let rootPath =  process.env.UNI_INPUT_DIR || (process.env.INIT_CWD + "\\src")
+let rootPath = normalizePath(process.env.UNI_INPUT_DIR || (process.env.INIT_CWD + "\\src"))
 let insetLoader = {}
 
 // 生成path对应的对象结构
